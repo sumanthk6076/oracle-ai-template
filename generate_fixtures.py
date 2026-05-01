@@ -15,12 +15,11 @@ import os
 import random
 import sys
 from datetime import datetime, timedelta
-
+from db_connect import get_connection
 from dotenv import load_dotenv
 from faker import Faker
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "src"))
-from db_connect import get_connection
 
 load_dotenv()
 
