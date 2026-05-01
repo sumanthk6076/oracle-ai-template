@@ -1,0 +1,28 @@
+# ── CREDENTIALS — NEVER COMMIT THESE ──
+.env
+wallet/
+
+# ── PYTHON ──
+venv/
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+*.egg-info/
+dist/
+build/
+
+# ── OUTPUTS ──
+output_*.csv
+output_*.txt
+output_*.json
+output_*.pdf
+*.log
+
+# ── IDE ──
+.vscode/
+.idea/
+.DS_Store
+
+# ── CLAUDE CODE ──
+.claude/

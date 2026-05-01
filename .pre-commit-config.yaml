@@ -1,0 +1,47 @@
+repos:
+  # 🔹 Core sanity checks (fast, always run)
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-json
+      - id: check-added-large-files
+      - id: detect-private-key
+
+  # 🔹 Ruff (Linter + Formatter replacement for flake8, isort, etc.)
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.5.0
+    hooks:
+      - id: ruff
+        args: [--fix]
+      - id: ruff-format
+
+  # 🔹 Black (stable formatting - optional but still widely used)
+  - repo: https://github.com/psf/black
+    rev: 24.4.2
+    hooks:
+      - id: black
+        language_version: python3
+
+  # 🔹 MyPy (type checking - optional but powerful)
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.10.0
+    hooks:
+      - id: mypy
+        additional_dependencies: [types-requests]
+        args: [--ignore-missing-imports]
+
+  # 🔹 Bandit (security checks)
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.7.9
+    hooks:
+      - id: bandit
+        args: ["-ll"]  # medium+ severity only
+
+  # 🔹 Jupyter Notebook cleanup (great for AI projects)
+  - repo: https://github.com/kynan/nbstripout
+    rev: 0.7.1
+    hooks:
+      - id: nbstripout
