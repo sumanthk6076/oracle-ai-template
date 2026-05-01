@@ -14,13 +14,13 @@ Environment variables (from .env):
 import os
 import random
 import sys
+from datetime import datetime, timedelta
+
+from dotenv import load_dotenv
+from faker import Faker
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "src"))
 from db_connect import get_connection
-
-from datetime import datetime, timedelta
-from faker import Faker
-from dotenv import load_dotenv
 
 load_dotenv()
 
@@ -65,17 +65,14 @@ def create_table(conn):
     """Drop and recreate the ap_invoices table."""
     with conn.cursor() as cur:
         # Drop if exists — ignore error if it doesn't
-        cur.execute(
-            """
+        cur.execute("""
             BEGIN
                 EXECUTE IMMEDIATE 'DROP TABLE ap_invoices PURGE';
             EXCEPTION WHEN OTHERS THEN NULL;
             END;
-        """
-        )
+        """)
 
-        cur.execute(
-            """
+        cur.execute("""
             CREATE TABLE ap_invoices (
                 invoice_id      VARCHAR2(20)    PRIMARY KEY,
                 vendor_name     VARCHAR2(100)   NOT NULL,
@@ -88,8 +85,7 @@ def create_table(conn):
                 po_number       VARCHAR2(20)    NOT NULL,
                 created_by      VARCHAR2(50)    DEFAULT 'GENERATE_FIXTURES'
             )
-        """
-        )
+        """)
         conn.commit()
         print("✅ Table ap_invoices created")
 
@@ -151,44 +147,38 @@ def verify(conn):
 
         # Breakdown by org
         print("\nBy organisation:")
-        cur.execute(
-            """
+        cur.execute("""
             SELECT org_id,
                    COUNT(*) AS count,
                    ROUND(SUM(amount_usd), 2) AS total_usd
             FROM ap_invoices
             GROUP BY org_id
             ORDER BY org_id
-        """
-        )
+        """)
         for row in cur.fetchall():
             print(f"   {row[0]}: {row[1]} invoices — ${row[2]:,.2f}")
 
         # Breakdown by status
         print("\nBy status:")
-        cur.execute(
-            """
+        cur.execute("""
             SELECT status, COUNT(*) AS count
             FROM ap_invoices
             GROUP BY status
             ORDER BY status
-        """
-        )
+        """)
         for row in cur.fetchall():
             print(f"   {row[0]}: {row[1]}")
 
         # Holds breakdown
         print("\nHolds by reason:")
-        cur.execute(
-            """
+        cur.execute("""
             SELECT hold_reason, COUNT(*) AS count,
                    ROUND(SUM(amount_usd), 2) AS total_usd
             FROM ap_invoices
             WHERE hold_reason IS NOT NULL
             GROUP BY hold_reason
             ORDER BY count DESC
-        """
-        )
+        """)
         for row in cur.fetchall():
             print(f"   {row[0]}: {row[1]} invoices — ${row[2]:,.2f}")
 
